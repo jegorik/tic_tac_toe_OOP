@@ -1,14 +1,23 @@
 import random
 
 
-class TicTacToe:
-    board = []
+class Game:
     game = False
-    players = []
-    marker = ''
 
     def __init__(self):
-        pass
+        print('Game name:' + type(self).__name__)
+
+    def start_game(self):
+        raise NotImplementedError("Subclass must implement this abstract method")
+
+    def new_game(self):
+        raise NotImplementedError("Subclass must implement this abstract method")
+
+
+class TicTacToe(Game):
+    board = []
+    players = []
+    marker = ''
 
     def get_board(self):
         return self.board
@@ -41,18 +50,6 @@ class TicTacToe:
             else:
                 check_user_input = False
         return int(user_input)
-
-    @staticmethod
-    def start_game():
-        user_exit_input = ''
-        while user_exit_input not in ['Y', 'N']:
-            user_exit_input = input('Start game? (Y or N) ')
-            if user_exit_input not in ['Y', 'N']:
-                print('Sorry invalid input, please choose Y or N')
-        if user_exit_input == 'Y':
-            return True
-        else:
-            return False
 
     def update_board(self, cell_number, marker):
         self.board[cell_number] = str(marker)
@@ -113,6 +110,26 @@ class TicTacToe:
         else:
             return True
 
+    def new_game(self):
+        self.create_board()
+        self.players = self.choose_marker()
+        self.marker = self.players[self.first_turn()]
+        print(self.marker, 'goes first')
+        self.show_board()
+        self.game_process()
+
+    @staticmethod
+    def start_game(**kwargs):
+        user_exit_input = ''
+        while user_exit_input not in ['Y', 'N']:
+            user_exit_input = input('Start game? (Y or N) ')
+            if user_exit_input not in ['Y', 'N']:
+                print('Sorry invalid input, please choose Y or N')
+        if user_exit_input == 'Y':
+            return True
+        else:
+            return False
+
     def game_process(self):
         while self.game:
             print(self.marker, ' Turn')
@@ -131,14 +148,6 @@ class TicTacToe:
                     self.new_game()
             else:
                 self.marker = self.change_player()
-
-    def new_game(self):
-        self.create_board()
-        self.players = self.choose_marker()
-        self.marker = self.players[self.first_turn()]
-        print(self.marker, 'goes first')
-        self.show_board()
-        self.game_process()
 
 
 new_game_TicTacToe = TicTacToe()
